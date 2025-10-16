@@ -196,7 +196,7 @@ export default function Home({ theme, history, setHistory }) {
       {/* Music Player */}
         {currentSong && (
         <div
-          className={`fixed bottom-7 left-0 w-full px-4 py-4 shadow-2xl backdrop-blur-xl flex flex-col gap-3 z-50 transition-all ${
+          className={`fixed bottom-10 left-0 w-full px-4 py-4 shadow-2xl backdrop-blur-xl flex flex-col gap-3 z-50 transition-all ${
             theme === "dark" ? "bg-gray-900/95" : "bg-white/95"
           }`}
           style={{ height: `${playerHeight}px` }}
