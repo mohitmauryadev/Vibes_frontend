@@ -25,9 +25,7 @@ export default function Home({ theme, history, setHistory }) {
   const [duration, setDuration] = useState(0);
 
   const audioRef = useRef(null);
-  const progressRef = useRef(null);
 
-  // Fetch default song
   useEffect(() => {
     const fetchDefault = async () => {
       try {
@@ -48,7 +46,6 @@ export default function Home({ theme, history, setHistory }) {
     fetchDefault();
   }, []);
 
-  // Auto play song
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.play().catch(() => {});
@@ -56,17 +53,13 @@ export default function Home({ theme, history, setHistory }) {
     }
   }, [currentSong]);
 
-  // Volume
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
-  // Progress
   useEffect(() => {
     const interval = setInterval(() => {
-      if (audioRef.current && isPlaying) {
-        setProgress(audioRef.current.currentTime);
-      }
+      if (audioRef.current && isPlaying) setProgress(audioRef.current.currentTime);
     }, 500);
     return () => clearInterval(interval);
   }, [isPlaying]);
@@ -116,24 +109,16 @@ export default function Home({ theme, history, setHistory }) {
     }, 300);
   };
 
-  const changeVolume = (delta) => {
-    setVolume((v) => Math.min(1, Math.max(0, v + delta)));
-  };
-
+  const changeVolume = (delta) => setVolume((v) => Math.min(1, Math.max(0, v + delta)));
   const handleSeek = (e) => {
     const newTime = e.target.value;
     setProgress(newTime);
     if (audioRef.current) audioRef.current.currentTime = newTime;
   };
-
-  const formatTime = (time) => {
-    const min = Math.floor(time / 60);
-    const sec = Math.floor(time % 60);
-    return `${min}:${sec < 10 ? "0" + sec : sec}`;
-  };
+  const formatTime = (time) => `${Math.floor(time / 60)}:${Math.floor(time % 60).toString().padStart(2,"0")}`;
 
   // Player height for padding
-  const playerHeight = 96; // px, adjust as needed
+  const playerHeight = 120;
 
   return (
     <div
@@ -181,14 +166,8 @@ export default function Home({ theme, history, setHistory }) {
               alt="thumb"
               className="w-full h-48 rounded-xl object-cover mb-4"
             />
-            <div className="font-semibold text-lg truncate">
-              {defaultSong.trackName}
-            </div>
-            <div
-              className={`text-sm truncate ${
-                theme === "dark" ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
+            <div className="font-semibold text-lg truncate">{defaultSong.trackName}</div>
+            <div className={`text-sm truncate ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
               {defaultSong.artistName}
             </div>
           </div>
@@ -207,11 +186,7 @@ export default function Home({ theme, history, setHistory }) {
               className="w-full h-48 rounded-xl object-cover mb-4"
             />
             <div className="font-semibold text-lg truncate">{item.trackName}</div>
-            <div
-              className={`text-sm truncate ${
-                theme === "dark" ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
+            <div className={`text-sm truncate ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
               {item.artistName}
             </div>
           </div>
@@ -221,72 +196,57 @@ export default function Home({ theme, history, setHistory }) {
       {/* Music Player */}
       {currentSong && (
         <div
-          className={`fixed bottom-0 left-0 w-full px-6 py-4 shadow-2xl backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between z-50 transition-all ${
-            theme === "dark" ? "bg-gray-900/90" : "bg-white/90"
+          className={`fixed bottom-0 left-0 w-full px-4 py-4 shadow-2xl backdrop-blur-xl flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap gap-3 z-50 transition-all ${
+            theme === "dark" ? "bg-gray-900/95" : "bg-white/95"
           }`}
           style={{ height: `${playerHeight}px` }}
         >
-          <div className="flex items-center gap-4 mb-2 sm:mb-0">
-            <img
-              src={currentSong.artwork}
-              alt="album"
-              className="w-16 h-16 rounded-lg object-cover"
-            />
-            <div>
-              <div className="font-semibold">{currentSong.trackName}</div>
-              <div
-                className={`text-sm ${
-                  theme === "dark" ? "text-gray-400" : "text-gray-700"
-                }`}
-              >
+          <div className="flex items-center gap-3 flex-1 min-w-[180px]">
+            <img src={currentSong.artwork} alt="album" className="w-16 h-16 rounded-lg object-cover"/>
+            <div className="truncate">
+              <div className="font-semibold truncate">{currentSong.trackName}</div>
+              <div className={`text-sm truncate ${theme === "dark" ? "text-gray-400" : "text-gray-700"}`}>
                 {currentSong.artistName}
               </div>
             </div>
           </div>
 
-          {/* Progress */}
-          <div className="flex flex-col items-center w-full sm:w-1/2 px-4">
+          <div className="flex flex-col sm:flex-row items-center gap-3 flex-1 min-w-[180px]">
             <input
               type="range"
-              ref={progressRef}
               min="0"
               max={duration}
               value={progress}
               onChange={handleSeek}
-              className="w-full accent-emerald-500 cursor-pointer"
+              className="w-full sm:w-auto accent-emerald-500 cursor-pointer"
             />
-            <div className="flex justify-between text-xs w-full mt-1 text-gray-400">
+            <div className="flex justify-between text-xs w-full sm:w-auto text-gray-400">
               <span>{formatTime(progress)}</span>
               <span>{formatTime(duration)}</span>
             </div>
           </div>
 
-          {/* Controls */}
-          <div className="flex items-center gap-4">
-            <button onClick={() => changeVolume(-0.1)}>
-              <SpeakerXMarkIcon className="w-6 h-6 text-emerald-400 hover:text-emerald-500 transition" />
+          <div className="flex items-center gap-3 flex-1 justify-end min-w-[180px]">
+            <button onClick={() => changeVolume(-0.1)} className="p-2 rounded-full bg-gray-200/30 hover:bg-gray-300/30">
+              <SpeakerXMarkIcon className="w-6 h-6 text-emerald-500"/>
             </button>
             <button
               onClick={togglePlay}
-              className="bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-full font-semibold transition flex items-center gap-2"
+              className="px-4 py-2 rounded-full bg-emerald-500 hover:bg-emerald-600 flex items-center gap-2 text-white font-semibold"
             >
-              {isPlaying ? <PauseIcon className="w-5 h-5" /> : <PlayIcon className="w-5 h-5" />}
+              {isPlaying ? <PauseIcon className="w-5 h-5"/> : <PlayIcon className="w-5 h-5"/>}
               {isPlaying ? "Pause" : "Play"}
             </button>
-            <button onClick={() => changeVolume(0.1)}>
-              <SpeakerWaveIcon className="w-6 h-6 text-emerald-400 hover:text-emerald-500 transition" />
+            <button onClick={() => changeVolume(0.1)} className="p-2 rounded-full bg-gray-200/30 hover:bg-gray-300/30">
+              <SpeakerWaveIcon className="w-6 h-6 text-emerald-500"/>
             </button>
           </div>
 
           <audio
             ref={audioRef}
             src={currentSong.previewUrl}
-            onTimeUpdate={() =>
-              setProgress(audioRef.current ? audioRef.current.currentTime : 0)
-            }
-            onLoadedMetadata={() =>
-              setDuration(audioRef.current ? audioRef.current.duration : 0)
-            }
+            onTimeUpdate={() => setProgress(audioRef.current?.currentTime || 0)}
+            onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
             onEnded={() => setIsPlaying(false)}
             autoPlay
             className="hidden"
