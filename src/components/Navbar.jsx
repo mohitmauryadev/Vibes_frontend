@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import Developer from "../../public/Developer.mp3";
 import {
   SunIcon,
   MoonIcon,
@@ -11,7 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar({ theme, toggleTheme }) {
   const navigate = useNavigate();
-  const audioRef = useRef(new Audio("/public/Developer.mp3")); 
+  const audioRef = useRef(new Audio("" + Developer)); 
 
   const playDeveloperMusic = () => {
     const audio = audioRef.current;
