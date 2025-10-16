@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+import Mohit1 from "../../public/Mohit1.jpg"
+import Mohit2 from "../../public/Mohit2.jpg"
+import Mohit3 from "../../public/Mohit3.jpg"
+
 
 const teamMembers = [
   {
@@ -29,9 +33,9 @@ const teamMembers = [
 
 // ✅ Add all your profile images here
 const profileImages = [
-  "https://i.ibb.co/7JxVM2Md/IMG-20251012-135845-2.jpg",
-  "https://i.ibb.co/PbVhfdt/IMG-20241218-195217.jpg",
-  "https://i.ibb.co/nMB96Jfn/IMG-20241218-195217-2.jpg",
+  Mohit1,
+  Mohit2,
+  Mohit3,
   "https://media.licdn.com/dms/image/v2/D5603AQHYqoxkmsm_DQ/profile-displayphoto-scale_200_200/B56ZhsNtRVHMAc-/0/1754162191552?e=2147483647&v=beta&t=ICpZVQhICf00i8p4NCppyUhz6zsNKPY_VdRJ41A68mE",
 ];
 
