@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import {
   PlayIcon,
@@ -10,12 +11,11 @@ export default function Home({ theme, history, setHistory }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
 
-  // Default song info
   const defaultSong = {
     trackName: "Ram Siya Ram Siya Ram Jay Jay Ram",
     artistName: "Traditional / Devotional",
     artwork: "https://i.ytimg.com/vi/YgF2rj9xvTw/hqdefault.jpg",
-    previewUrl: "https://example.com/ram_siya_ram.mp3", // optional
+    previewUrl: "https://example.com/ram_siya_ram.mp3",
   };
 
   const [currentSong, setCurrentSong] = useState(defaultSong);
@@ -27,7 +27,7 @@ export default function Home({ theme, history, setHistory }) {
   const audioRef = useRef(null);
   const progressRef = useRef(null);
 
-  // ✅ Fetch default "Ram Siya Ram" songs automatically on load
+  // Fetch default song
   useEffect(() => {
     const fetchDefault = async () => {
       try {
@@ -39,19 +39,16 @@ export default function Home({ theme, history, setHistory }) {
         const data = await resp.json();
         if (data.items && data.items.length > 0) {
           setResults(data.items);
-          setCurrentSong(data.items[0]); // play first result automatically
-        } else {
-          setResults([]);
-        }
+          setCurrentSong(data.items[0]);
+        } else setResults([]);
       } catch (err) {
         console.error("Default fetch failed:", err);
       }
     };
-
     fetchDefault();
   }, []);
 
-  // Auto play default or fetched song
+  // Auto play song
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.play().catch(() => {});
@@ -59,12 +56,12 @@ export default function Home({ theme, history, setHistory }) {
     }
   }, [currentSong]);
 
-  // Volume Control
+  // Volume
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
-  // Progress bar update
+  // Progress
   useEffect(() => {
     const interval = setInterval(() => {
       if (audioRef.current && isPlaying) {
@@ -102,7 +99,6 @@ export default function Home({ theme, history, setHistory }) {
         audioRef.current.play();
         setIsPlaying(true);
 
-        // Save to history
         const exists = history.find((h) => h.trackName === song.trackName);
         if (!exists) {
           const newHistory = [
@@ -136,18 +132,19 @@ export default function Home({ theme, history, setHistory }) {
     return `${min}:${sec < 10 ? "0" + sec : sec}`;
   };
 
+  // Player height for padding
+  const playerHeight = 96; // px, adjust as needed
+
   return (
     <div
-      className={`min-h-screen flex flex-col items-center px-4 py-8 pb-36 transition-colors duration-300 ${
-        theme === "dark"
-          ? "bg-gray-900 text-white"
-          : "bg-gray-100 text-gray-900"
+      className={`min-h-screen flex flex-col items-center px-4 py-8 pb-[${playerHeight}px] transition-colors duration-300 ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
-      {/* 🔍 Search */}
+      {/* Search */}
       <form
         onSubmit={doSearch}
-        className={`w-full max-w-3xl flex rounded-2xl shadow-lg overflow-hidden mb-8 ${
+        className={`w-full max-w-3xl flex flex-col sm:flex-row rounded-2xl shadow-lg overflow-hidden mb-8 ${
           theme === "dark" ? "bg-gray-800" : "bg-white"
         }`}
       >
@@ -164,13 +161,13 @@ export default function Home({ theme, history, setHistory }) {
         />
         <button
           type="submit"
-          className="bg-emerald-500 hover:bg-emerald-600 px-6 py-3 font-semibold transition"
+          className="mt-2 sm:mt-0 sm:ml-2 bg-emerald-500 hover:bg-emerald-600 px-6 py-3 font-semibold transition flex-shrink-0"
         >
           Search
         </button>
       </form>
 
-      {/* 🎵 Songs Grid */}
+      {/* Songs Grid */}
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {results.length === 0 && (
           <div
@@ -196,7 +193,6 @@ export default function Home({ theme, history, setHistory }) {
             </div>
           </div>
         )}
-
         {results.map((item, index) => (
           <div
             key={index}
@@ -210,9 +206,7 @@ export default function Home({ theme, history, setHistory }) {
               alt="thumb"
               className="w-full h-48 rounded-xl object-cover mb-4"
             />
-            <div className="font-semibold text-lg truncate">
-              {item.trackName}
-            </div>
+            <div className="font-semibold text-lg truncate">{item.trackName}</div>
             <div
               className={`text-sm truncate ${
                 theme === "dark" ? "text-gray-400" : "text-gray-600"
@@ -224,12 +218,13 @@ export default function Home({ theme, history, setHistory }) {
         ))}
       </div>
 
-      {/* 🎧 Music Player */}
+      {/* Music Player */}
       {currentSong && (
         <div
           className={`fixed bottom-0 left-0 w-full px-6 py-4 shadow-2xl backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between z-50 transition-all ${
             theme === "dark" ? "bg-gray-900/90" : "bg-white/90"
           }`}
+          style={{ height: `${playerHeight}px` }}
         >
           <div className="flex items-center gap-4 mb-2 sm:mb-0">
             <img
@@ -249,7 +244,7 @@ export default function Home({ theme, history, setHistory }) {
             </div>
           </div>
 
-          {/* Progress Bar */}
+          {/* Progress */}
           <div className="flex flex-col items-center w-full sm:w-1/2 px-4">
             <input
               type="range"
@@ -275,11 +270,7 @@ export default function Home({ theme, history, setHistory }) {
               onClick={togglePlay}
               className="bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-full font-semibold transition flex items-center gap-2"
             >
-              {isPlaying ? (
-                <PauseIcon className="w-5 h-5" />
-              ) : (
-                <PlayIcon className="w-5 h-5" />
-              )}
+              {isPlaying ? <PauseIcon className="w-5 h-5" /> : <PlayIcon className="w-5 h-5" />}
               {isPlaying ? "Pause" : "Play"}
             </button>
             <button onClick={() => changeVolume(0.1)}>
