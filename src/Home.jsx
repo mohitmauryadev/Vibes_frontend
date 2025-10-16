@@ -117,7 +117,8 @@ export default function Home({ theme, history, setHistory }) {
   };
   const formatTime = (time) => `${Math.floor(time / 60)}:${Math.floor(time % 60).toString().padStart(2,"0")}`;
 
-  const playerHeight = 140;
+  // Player height for padding
+  const playerHeight = 120;
 
   return (
     <div
@@ -192,8 +193,8 @@ export default function Home({ theme, history, setHistory }) {
         ))}
       </div>
 
-      {/* Responsive Music Player */}
-      {currentSong && (
+      {/* Music Player */}
+        {currentSong && (
         <div
           className={`fixed bottom-7 left-0 w-full px-4 py-4 shadow-2xl backdrop-blur-xl flex flex-col gap-3 z-50 transition-all ${
             theme === "dark" ? "bg-gray-900/95" : "bg-white/95"
