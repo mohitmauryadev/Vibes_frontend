@@ -117,8 +117,7 @@ export default function Home({ theme, history, setHistory }) {
   };
   const formatTime = (time) => `${Math.floor(time / 60)}:${Math.floor(time % 60).toString().padStart(2,"0")}`;
 
-  // Player height for padding
-  const playerHeight = 120;
+  const playerHeight = 140;
 
   return (
     <div
@@ -193,15 +192,16 @@ export default function Home({ theme, history, setHistory }) {
         ))}
       </div>
 
-      {/* Music Player */}
+      {/* Responsive Music Player */}
       {currentSong && (
         <div
-          className={`fixed bottom-0 left-0 w-full px-4 py-4 shadow-2xl backdrop-blur-xl flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap gap-3 z-50 transition-all ${
+          className={`fixed bottom-7 left-0 w-full px-4 py-4 shadow-2xl backdrop-blur-xl flex flex-col gap-3 z-50 transition-all ${
             theme === "dark" ? "bg-gray-900/95" : "bg-white/95"
           }`}
           style={{ height: `${playerHeight}px` }}
         >
-          <div className="flex items-center gap-3 flex-1 min-w-[180px]">
+          {/* Top: Song info */}
+          <div className="flex items-center gap-3">
             <img src={currentSong.artwork} alt="album" className="w-16 h-16 rounded-lg object-cover"/>
             <div className="truncate">
               <div className="font-semibold truncate">{currentSong.trackName}</div>
@@ -211,33 +211,33 @@ export default function Home({ theme, history, setHistory }) {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-3 flex-1 min-w-[180px]">
+          {/* Middle: Progress */}
+          <div className="flex items-center gap-3 w-full">
+            <span className="text-xs text-gray-400">{formatTime(progress)}</span>
             <input
               type="range"
               min="0"
               max={duration}
               value={progress}
               onChange={handleSeek}
-              className="w-full sm:w-auto accent-emerald-500 cursor-pointer"
+              className="flex-grow accent-emerald-500 cursor-pointer"
             />
-            <div className="flex justify-between text-xs w-full sm:w-auto text-gray-400">
-              <span>{formatTime(progress)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
+            <span className="text-xs text-gray-400">{formatTime(duration)}</span>
           </div>
 
-          <div className="flex items-center gap-3 flex-1 justify-end min-w-[180px]">
-            <button onClick={() => changeVolume(-0.1)} className="p-2 rounded-full bg-gray-200/30 hover:bg-gray-300/30">
+          {/* Bottom: Controls */}
+          <div className="flex items-center justify-between gap-4 w-full">
+            <button onClick={() => changeVolume(-0.1)} className="p-3 rounded-full bg-gray-200/30 hover:bg-gray-300/30">
               <SpeakerXMarkIcon className="w-6 h-6 text-emerald-500"/>
             </button>
             <button
               onClick={togglePlay}
-              className="px-4 py-2 rounded-full bg-emerald-500 hover:bg-emerald-600 flex items-center gap-2 text-white font-semibold"
+              className="flex-1 px-4 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 flex items-center justify-center gap-2 text-white font-semibold"
             >
-              {isPlaying ? <PauseIcon className="w-5 h-5"/> : <PlayIcon className="w-5 h-5"/>}
+              {isPlaying ? <PauseIcon className="w-6 h-6"/> : <PlayIcon className="w-6 h-6"/>}
               {isPlaying ? "Pause" : "Play"}
             </button>
-            <button onClick={() => changeVolume(0.1)} className="p-2 rounded-full bg-gray-200/30 hover:bg-gray-300/30">
+            <button onClick={() => changeVolume(0.1)} className="p-3 rounded-full bg-gray-200/30 hover:bg-gray-300/30">
               <SpeakerWaveIcon className="w-6 h-6 text-emerald-500"/>
             </button>
           </div>
